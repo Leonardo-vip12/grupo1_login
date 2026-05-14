@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // DashboardAcademico.jsx
 
 import { useState } from "react";
@@ -35,8 +36,17 @@ export default function DashboardAcademico() {
       modal: "reingresante",
     },
   ];
+=======
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Login from './components/Login';
+import Register from './components/Register';
+import Dashboard from './components/Dashboard';
+>>>>>>> 8cd1d9ec10d92cc680d4ef40203d954bf02ce7df
 
   return (
+<<<<<<< HEAD
     <div className="dashboard">
 
       {/* HERO */}
@@ -215,3 +225,18 @@ function Input({ label }) {
     </div>
   );
 }
+=======
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
+}
+
+export default App;
+>>>>>>> 8cd1d9ec10d92cc680d4ef40203d954bf02ce7df
