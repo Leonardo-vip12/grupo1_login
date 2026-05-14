@@ -1,5 +1,5 @@
 export const mockUser = {
-  name: "Rowling Garcia",
+  name: "Rowling Garcia Cordova",
   role: "Estudiante de Desarrollo de Sistemas de Informacion",
   stats: {
     promedio: "20",
