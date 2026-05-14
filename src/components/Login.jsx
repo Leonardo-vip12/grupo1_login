@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Aquí podrías agregar validación de credenciales reales
-    // Por ahora, solo navegamos al dashboard
+    login('test', 'test');
     navigate('/dashboard');
   };
 
