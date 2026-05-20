@@ -1,3 +1,6 @@
+// src/components/Dashboard.jsx
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
   GraduationCap, 
@@ -10,27 +13,47 @@ import {
   Clock,
   ChevronRight
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import avatarImg from '../assets/imagenes/ROWLING.png';
+import { useAuth } from '../context/AuthContext';
 
 function Dashboard() {
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Redirigir si no hay usuario (después de que termine la carga)
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
+
+  // Mostrar un spinner mientras se carga la sesión
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#0f172a]">
+        <div className="text-white text-xl">Cargando sesión...</div>
+      </div>
+    );
+  }
+
+  // Si después de cargar no hay usuario, no renderizar nada (el useEffect redirigirá)
+  if (!user) {
+    return null;
+  }
+
   const handleLogout = () => {
-    navigate('/');
+    logout(); // Ya hace navigate('/')
   };
 
   return (
     <div className="min-h-screen flex bg-[#0f172a] text-white font-sans overflow-hidden">
       
-      {/* Background decorations - Manteniendo la estética del login */}
+      {/* Decoraciones de fondo */}
       <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-purple-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
       <div className="fixed top-[20%] right-[-5%] w-[30rem] h-[30rem] bg-indigo-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
       <div className="fixed bottom-[-20%] left-[20%] w-[35rem] h-[35rem] bg-blue-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
 
       {/* Sidebar */}
       <aside className="w-72 relative z-10 flex flex-col border-r border-white/10 bg-white/5 backdrop-blur-xl">
-        {/* Logo Area */}
         <div className="p-8 flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
             <GraduationCap className="w-7 h-7 text-white" />
@@ -40,7 +63,6 @@ function Dashboard() {
           </h1>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-4 space-y-2 mt-4">
           <NavItem icon={<LayoutDashboard size={20} />} text="Panel Principal" active />
           <NavItem icon={<BookOpen size={20} />} text="Mis Cursos" />
@@ -49,7 +71,6 @@ function Dashboard() {
           <NavItem icon={<Settings size={20} />} text="Ajustes" />
         </nav>
 
-        {/* User / Logout */}
         <div className="p-4 border-t border-white/10">
           <button 
             onClick={handleLogout}
@@ -63,8 +84,6 @@ function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 relative z-10 flex flex-col h-screen overflow-hidden">
-        
-        {/* Header */}
         <header className="h-24 flex items-center justify-between px-10 border-b border-white/10 bg-white/5 backdrop-blur-md">
           <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -82,52 +101,33 @@ function Dashboard() {
             </button>
             <div className="flex items-center gap-3 pl-6 border-l border-white/10">
               <div className="text-right hidden md:block">
-                <p className="text-sm font-semibold text-white">Rowling Garcia</p>
-                <p className="text-xs text-purple-300">Estudiante de Desarrollo de Sistemas de Informacion</p>
+                <p className="text-sm font-semibold text-white">{user.name}</p>
+                <p className="text-xs text-purple-300">{user.career || 'Estudiante'}</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 p-[2px]">
-                <div className="w-full h-full rounded-full bg-[#1e1b4b] border-2 border-transparent flex items-center justify-center overflow-hidden">
-                  <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
+                <div className="w-full h-full rounded-full bg-[#1e1b4b] flex items-center justify-center text-white font-bold text-sm">
+                  {user.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <div className="flex-1 overflow-y-auto p-10">
-          
           <div className="mb-10">
-            <h2 className="text-3xl font-bold mb-2">¡Hola, Estudiante! 👋</h2>
+            <h2 className="text-3xl font-bold mb-2">¡Hola, {user.name?.split(' ')[0]}! 👋</h2>
             <p className="text-gray-400">Aquí tienes un resumen de tu actividad académica.</p>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <StatCard 
-              title="Promedio Actual" 
-              value="20" 
-              subtitle="↑ 18 desde el mes pasa"
-              color="from-green-400 to-emerald-600"
-            />
-            <StatCard 
-              title="Cursos Activos" 
-              value="6" 
-              subtitle="2 tareas pendientes"
-              color="from-blue-400 to-indigo-600"
-            />
-            <StatCard 
-              title="Créditos" 
-              value="124" 
-              subtitle="De 160 requeridos"
-              color="from-purple-400 to-pink-600"
-            />
+            <StatCard title="Promedio Actual" value="20" subtitle="↑ 18 desde el mes pasado" color="from-green-400 to-emerald-600" />
+            <StatCard title="Cursos Activos" value="6" subtitle="2 tareas pendientes" color="from-blue-400 to-indigo-600" />
+            <StatCard title="Créditos" value="124" subtitle="De 160 requeridos" color="from-purple-400 to-pink-600" />
           </div>
 
-          {/* Recent Activity & Schedule */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Courses List */}
+            {/* Cursos */}
             <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-semibold">Tus Cursos</h3>
@@ -143,31 +143,15 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* Upcoming */}
+            {/* Eventos */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
               <h3 className="text-xl font-semibold mb-6">Próximos Eventos</h3>
               <div className="space-y-5">
-                <EventItem 
-                  title="Entrega Proyecto Final" 
-                  course="Diseño Web" 
-                  time="Hoy, 23:59" 
-                  type="deadline" 
-                />
-                <EventItem 
-                  title="Examen Parcial" 
-                  course="Ingeniería de Software" 
-                  time="Mañana, 08:00 AM" 
-                  type="exam" 
-                />
-                <EventItem 
-                  title="Tutoría" 
-                  course="Bases de Datos" 
-                  time="Jueves, 14:00 PM" 
-                  type="meeting" 
-                />
+                <EventItem title="Entrega Proyecto Final" course="Diseño Web" time="Hoy, 23:59" type="deadline" />
+                <EventItem title="Examen Parcial" course="Ingeniería de Software" time="Mañana, 08:00 AM" type="exam" />
+                <EventItem title="Tutoría" course="Bases de Datos" time="Jueves, 14:00 PM" type="meeting" />
               </div>
             </div>
-
           </div>
         </div>
       </main>
@@ -175,25 +159,18 @@ function Dashboard() {
   );
 }
 
-// Sub-components for cleaner code
+// ===================== COMPONENTES INTERNOS =====================
 
 function NavItem({ icon, text, active = false }) {
   return (
-    <a 
-      href="#" 
-      className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ${
-        active 
-          ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-purple-500/30 shadow-[inset_0_0_20px_rgba(168,85,247,0.15)]' 
-          : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
-      }`}
-    >
-      <div className={`${active ? 'text-purple-400' : ''}`}>
-        {icon}
-      </div>
+    <a href="#" className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ${
+      active 
+        ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-purple-500/30 shadow-[inset_0_0_20px_rgba(168,85,247,0.15)]' 
+        : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+    }`}>
+      <div className={active ? 'text-purple-400' : ''}>{icon}</div>
       <span className={`font-medium ${active ? 'font-semibold' : ''}`}>{text}</span>
-      {active && (
-        <div className="ml-auto w-1.5 h-6 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
-      )}
+      {active && <div className="ml-auto w-1.5 h-6 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>}
     </a>
   );
 }
@@ -201,12 +178,8 @@ function NavItem({ icon, text, active = false }) {
 function StatCard({ title, value, subtitle, color }) {
   return (
     <div className="bg-white/5 border border-white/10 rounded-3xl p-6 relative overflow-hidden group hover:border-white/20 transition-all duration-300">
-      {/* Accent Line */}
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${color}`}></div>
-      
-      {/* Background Glow on Hover */}
       <div className={`absolute -right-10 -bottom-10 w-32 h-32 bg-gradient-to-br ${color} rounded-full mix-blend-multiply filter blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`}></div>
-
       <p className="text-gray-400 text-sm font-medium mb-1">{title}</p>
       <h3 className="text-4xl font-bold text-white mb-2">{value}</h3>
       <p className="text-xs text-gray-500">{subtitle}</p>
