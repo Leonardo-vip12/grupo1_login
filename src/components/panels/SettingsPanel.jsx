@@ -22,6 +22,21 @@ function SettingsPanel() {
               <input type="text" defaultValue="Rowling Garcia" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors" />
             </div>
             <div>
+              <label className="block text-gray-400 text-sm mb-2">Numero de Celular</label>
+              <input
+                type="tel"
+                defaultValue="987654321"
+                inputMode="numeric"
+                onKeyDown={(e) => {
+                  const allowed = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+                  if (!allowed.includes(e.key) && !/^\d$/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors"
+              />
+            </div>
+            <div>
               <label className="block text-gray-400 text-sm mb-2">Correo electrónico</label>
               <input type="email" defaultValue="rowling@universidad.edu" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors" />
             </div>
