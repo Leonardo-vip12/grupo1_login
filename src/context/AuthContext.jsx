@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
-// Usuario inicial de pruebas (opcional)
+const DEFAULT_STATS = {
+  promedio: "20",
+  promedioSubtitle: "↑ 18 desde el mes pasado",
+  cursosActivos: "6",
+  cursosSubtitle: "2 tareas pendientes",
+  creditos: "124",
+  creditosSubtitle: "De 160 requeridos"
+};
+
 const DEMO_USERS = [
   {
     id: '1',
@@ -12,7 +20,8 @@ const DEMO_USERS = [
     email: 'rowling@universidad.edu',
     password: '123456',
     role: 'estudiante',
-    career: 'Desarrollo de Sistemas de Informacion'
+    career: 'Desarrollo de Sistemas de Informacion',
+    stats: DEFAULT_STATS
   }
 ];
 
@@ -36,23 +45,22 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Ya existe una cuenta con este correo electrónico.');
       }
 
-      // 2. Crear nuevo usuario (sin guardar contraseña en texto plano en producción)
+      // 2. Crear nuevo usuario
       const newUser = {
         id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
         name: userData.name,
         email: userData.email,
-        password: userData.password, // ⚠️ En producción hashear con bcrypt
-        role: userData.role || 'estudiante',
-        career: userData.career || '',
-        avatar: userData.avatar || null
+        password: userData.password,
+        role: userData.role || 'Estudiante',
+        career: userData.career || 'Desarrollo de Sistemas de Información',
+        avatar: userData.avatar || null,
+        stats: DEFAULT_STATS
       };
 
       // 3. Guardar en "base de datos" simulada
       users.push(newUser);
       localStorage.setItem('academic_users', JSON.stringify(users));
 
-      // 4. Opcional: iniciar sesión automáticamente después de registrarse
-      // Para este ejemplo, registramos y luego redirigimos al login
       return { success: true };
     } catch (err) {
       setError(err.message);
