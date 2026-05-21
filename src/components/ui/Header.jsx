@@ -1,6 +1,5 @@
 import React from 'react';
 import { Menu, Search, Bell } from 'lucide-react';
-import avatarImg from '../../assets/imagenes/ROWLING.png';
 
 function Header({ setIsSidebarOpen, user }) {
   return (
@@ -33,8 +32,8 @@ function Header({ setIsSidebarOpen, user }) {
             <p className="text-xs text-purple-300">{user.role}</p>
           </div>
           <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 p-[2px]">
-            <div className="w-full h-full rounded-full bg-[#1e1b4b] border-2 border-transparent flex items-center justify-center overflow-hidden">
-              <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
+            <div className="w-full h-full rounded-full bg-[#1e1b4b] flex items-center justify-center text-white font-bold text-sm">
+              {user.name?.charAt(0).toUpperCase() || 'U'}
             </div>
           </div>
         </div>

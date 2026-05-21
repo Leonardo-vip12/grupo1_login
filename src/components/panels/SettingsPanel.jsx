@@ -95,3 +95,5 @@ function Toggle({ option, defaultChecked }) {
 }
 
 export default SettingsPanel;
+
+

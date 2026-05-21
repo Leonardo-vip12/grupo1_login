@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// src/components/Dashboard.jsx
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,14 +12,34 @@ import Sidebar from './ui/Sidebar';
 import Header from './ui/Header';
 
 function Dashboard() {
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('Panel Principal');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Redirigir si no hay usuario (después de que termine la carga)
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
+
+  // Mostrar un spinner mientras se carga la sesión
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#0f172a]">
+        <div className="text-white text-xl">Cargando sesión...</div>
+      </div>
+    );
+  }
+
+  // Si después de cargar no hay usuario, no renderizar nada (el useEffect redirigirá)
+  if (!user) {
+    return null;
+  }
+
   const handleLogout = () => {
-    logout();
-    navigate('/');
+    logout(); // Ya hace navigate('/')
   };
 
   // Renderiza el panel correcto según la pestaña seleccionada
@@ -44,12 +65,10 @@ function Dashboard() {
     }
   };
 
-  if (!user) return null;
-
   return (
     <div className="min-h-screen flex bg-[#0f172a] text-white font-sans overflow-hidden">
       
-      {/* Background decorations - Manteniendo la estética del login */}
+      {/* Decoraciones de fondo */}
       <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-purple-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
       <div className="fixed top-[20%] right-[-5%] w-[30rem] h-[30rem] bg-indigo-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
       <div className="fixed bottom-[-20%] left-[20%] w-[35rem] h-[35rem] bg-blue-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-30 pointer-events-none"></div>
