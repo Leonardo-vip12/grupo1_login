@@ -17,19 +17,13 @@ const DEMO_USERS = [
 ];
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('academic_user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // Cargar sesión guardada al iniciar la app
-  useEffect(() => {
-    const storedUser = localStorage.getItem('academic_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
 
   // Función de registro
   const register = async (userData) => {
@@ -84,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       // No guardamos la contraseña en el estado del usuario
+      // eslint-disable-next-line no-unused-vars
       const { password: _, ...userWithoutPassword } = foundUser;
       setUser(userWithoutPassword);
       localStorage.setItem('academic_user', JSON.stringify(userWithoutPassword));
@@ -114,6 +109,7 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

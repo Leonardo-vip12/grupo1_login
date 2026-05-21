@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // DashboardAcademico.jsx
 
 import { useState } from "react";
@@ -11,42 +11,16 @@ import {
 
 import "./app.css";
 
-export default function DashboardAcademico() {
-  const [modal, setModal] = useState(null);
-
-  const cards = [
-    {
-      title: "Nuevos\nEstudiantes",
-      icon: UserPlus,
-      gradient: "gradient-purple",
-      modal: "nuevo",
-    },
-
-    {
-      title: "Estudiantes",
-      icon: GraduationCap,
-      gradient: "gradient-blue",
-      modal: "estudiante",
-    },
-
-    {
-      title: "Reingresantes",
-      icon: BookOpen,
-      gradient: "gradient-green",
-      modal: "reingresante",
-    },
-  ];
-=======
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
->>>>>>> 8cd1d9ec10d92cc680d4ef40203d954bf02ce7df
+
 
   return (
-<<<<<<< HEAD
+
     <div className="dashboard">
 
       {/* HERO */}
@@ -114,7 +88,7 @@ import Dashboard from './components/Dashboard';
       )}
     </div>
   );
-}
+
 
 /* ====================================================== */
 /* MODAL */
@@ -225,7 +199,7 @@ function Input({ label }) {
     </div>
   );
 }
-=======
+
     <Router>
       <AuthProvider>
         <Routes>
@@ -235,8 +209,7 @@ function Input({ label }) {
         </Routes>
       </AuthProvider>
     </Router>
-  );
-}
+  
 
 export default App;
->>>>>>> 8cd1d9ec10d92cc680d4ef40203d954bf02ce7df
+
